@@ -3032,6 +3032,11 @@ int main (int argc, char *argv[]) {
 					if(CFG_getShowGameArt()) {
 						char thumbpath[1024];
 						snprintf(thumbpath, sizeof(thumbpath), "%s/.media/%s.png", rompath, res_copy);
+						// Pico-8 carts are PNG images, so with no art in .media the cart
+						// itself is used as its own artwork instead of a duplicate copy
+						if (entry->type == ENTRY_ROM && suffixMatch(".p8.png", entry->path) && !exists(thumbpath)) {
+							snprintf(thumbpath, sizeof(thumbpath), "%s", entry->path);
+						}
 						had_thumb = 0;
 						startLoadThumb(thumbpath, onThumbLoaded, NULL);
 						int max_w = (int)(screen->w - (screen->w * CFG_getGameArtWidth()));
